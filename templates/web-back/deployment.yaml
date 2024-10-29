@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.webBack.name}}
+spec:
+  replicas: {{.Values.webBack.replicas}}
+  selector:
+    matchLabels:
+      app: {{.Values.webBack.name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.webBack.name}}
+    spec:
+      containers:
+        - name: {{.Values.webBack.name}}-container
+          image: {{.Values.deployment.imagePull.path}}/{{.Values.webBack.image}}
+          imagePullPolicy: {{.Values.webBack.imagePullPolicy}}
+          ports:
+            - name: http
+              containerPort: {{.Values.webBack.httpPort}}
+          env:
+            - name: TZ
+              value: {{.Values.deployment.TZ}}
+          command:
+            - bash
+            - {{.Values.deployment.nodeJsApps.workingDir}}/entrypoint.sh
+          volumeMounts:
+            - name: pvc
+              mountPath: {{.Values.deployment.nodeJsApps.containerLogFolder}}/
+              subPath: {{.Values.deployment.pvc.logsSubPath}}/{{.Values.webBack.name}}
+            - name: entrypoint
+              mountPath: {{.Values.deployment.nodeJsApps.workingDir}}/entrypoint.sh
+              subPath: entrypoint.sh
+            - name: db-config
+              mountPath: {{.Values.deployment.nodeJsApps.workingDir}}/app/config/db.config.js
+              subPath: db.config.js
+{{/*      imagePullSecrets:*/}}
+{{/*        - name: {{.Values.deployment.imagePull.secret}}*/}}
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: {{.Values.deployment.pvc.name}}
+        - name: entrypoint
+          configMap:
+            name: {{include "nodejs-entrypoint.name" . }}
+            defaultMode: 0744
+        - name: db-config
+          configMap:
+            name: {{include "web-back-db-config.name" . }}
+            defaultMode: 0644

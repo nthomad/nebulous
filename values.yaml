@@ -1,0 +1,49 @@
+
+# General Parameters
+deployment:
+  name: &deploymentName nebulous
+  TZ: &tz 'Europe/Athens'
+  imagePull:
+    secret: &imagepullSecret nebulous-registry
+    path: &imagepullPath ilinkdevops
+  pvc:
+    name: &pvcName nebulous-pvc
+    logsSubPath: logs
+  nodeJsApps:
+    workingDir: /usr/src/app
+    containerLogFolder: /mnt/app_logs
+
+mongodb:
+  deployment:
+    name: &mongoDbDeploymentName mongodb
+    port: &mongoDbPort 27017
+    rootUsername: &mongoDbRootUsername root
+    rootPassword: &mongoDbRootPassword '1234'
+    initDatabase: &mongoDbDatabase nebulous
+    userName: &mongoDbUsername user
+    userPassword: &mongoDbPassword '1234'
+    TZ: *tz
+    pvc:
+      name: *pvcName
+
+
+activemq:
+  enabled: true
+  deployment:
+    TZ: *tz
+    pvc:
+      name: *pvcName
+
+
+
+webBack:
+  name: web-back
+  image: nebulous-web-back:dev
+  replicas: 1
+  imagePullPolicy: Always
+  adminPassWord: 123123
+  httpPort: 9000
+  service:
+    # type: NodePort
+    type: ClusterIP
+    httpNodePort: 30000

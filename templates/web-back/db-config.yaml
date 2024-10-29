@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{include "web-back-db-config.name" . }}
+data:
+  db.config.js: |
+    module.exports = {
+
+     username: "{{.Values.mongodb.deployment.userName}}",
+     password: "{{.Values.mongodb.deployment.userPassword}}",
+     adminPassWord: "{{.Values.webBack.adminPassWord}}",
+
+    // url: "mongodb://161.97.64.226:27017/nebulous",
+    // url: "mongodb://192.168.178.145:32010/nebulous",
+    url: "mongodb://{{.Values.mongodb.deployment.name}}:{{.Values.mongodb.deployment.port}}/{{.Values.mongodb.deployment.initDatabase}}",
+    // ------------------------- Contabo Sevrer -------------------------
+
+    // url: "mongodb://localhost:27017/nebulous"
+
+    //    -------------------------------------------------------------------
+    };
+

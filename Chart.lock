@@ -1,0 +1,12 @@
+dependencies:
+- name: registry
+  repository: file://../../templates/dockerhub_registry
+  version: 1.0.1
+- name: mariadb
+  repository: file://../../templates/mariadb
+  version: 1.0.2
+- name: nginx-modsecurity
+  repository: file://../../templates/nginx_modsecurity
+  version: 1.0.4
+digest: sha256:d40d740c989c85ef44b44b5f63ea4ce0eb88288955679b04ab5fef794544c559
+generated: "2024-07-22T15:19:40.402064879+03:00"

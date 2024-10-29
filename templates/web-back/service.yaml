@@ -1,0 +1,19 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.webBack.name}}
+  labels:
+    app: {{.Values.webBack.name}}
+spec:
+  selector:
+    app: {{.Values.webBack.name}}
+  ports:
+    - protocol: TCP
+      name: http
+      port: {{.Values.webBack.httpPort}}
+      targetPort: {{.Values.webBack.httpPort}}
+      {{- if eq .Values.webBack.service.type "NodePort"}}
+      nodePort: {{.Values.webBack.service.httpNodePort}}
+      {{- end }}
+  type: {{.Values.webBack.service.type}}
